@@ -1,0 +1,21 @@
+
+   {
+    "bas-hana-pal.db::CUSTOMERCHURN_TRAINSAMPLE": {
+      "target": {
+        "object": "CUSTOMERCHURN_TRAINSAMPLE",
+        "schema": "PAL"
+      }
+    },
+    "bas-hana-pal.db::CUSTOMERCHURN_TESTSAMPLE": {
+      "target": {
+        "object": "CUSTOMERCHURN_TESTSAMPLE",
+        "schema": "PAL"
+      }
+    },
+    "bas-hana-pal.db::PALTrain": {
+      "target": {
+        "object": "PAL_UNIFIED_CLASSIFICATION",
+        "schema": "_SYS_AFL"
+      }
+    }
+  }

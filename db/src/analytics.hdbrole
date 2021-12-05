@@ -1,0 +1,12 @@
+{
+    "role": {
+        "name": "bas-hana-pal.db::analytics",
+        "schema_privileges": [
+            {
+                "privileges": [
+                    "SELECT"
+                ]
+            }
+        ]
+    }
+}

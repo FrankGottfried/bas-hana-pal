@@ -1,0 +1,64 @@
+PROCEDURE BASE_UNIFIEDINTERFACE_CLASSIFIER_FIT( out LT_UNIFIED_CLASSIFICATION_MODEL table ("ROW_INDEX" INT, "PART_INDEX" INT, "MODEL_CONTENT" NCLOB), 
+                                                out LT_UNIFIED_CLASSIFICATION_IMPORTANCE table ("VARIABLE_NAME" NVARCHAR(256), "IMPORTANCE" DOUBLE), 
+                                                out LT_UNIFIED_CLASSIFICATION_STATS table ("STAT_NAME" NVARCHAR(256), "STAT_VALUE" NVARCHAR(1000), "CLASS_NAME" NVARCHAR(256)),
+                                                out LT_UNIFIED_CLASSIFICATION_CONFUSION_MATRIX table("ACTUAL_CLASS" NVARCHAR(256), "PREDICTED_CLASS" NVARCHAR(256), "COUNT" INTEGER),
+                                                out LT_UNIFIED_CLASSIFICATION_METRICS table("NAME" NVARCHAR(256), "X" DOUBLE, "Y" DOUBLE ))
+
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS 
+BEGIN
+DECLARE param_name VARCHAR(5000) ARRAY;
+DECLARE int_value INTEGER ARRAY;
+DECLARE double_value DOUBLE ARRAY;
+DECLARE string_value VARCHAR(5000) ARRAY;
+param_name[1] := N'FUNCTION';
+int_value[1] := NULL;
+double_value[1] := NULL;
+string_value[1] := N'HGBT';
+param_name[2] := N'KEY';
+int_value[2] := 0;
+double_value[2] := NULL;
+string_value[2] := NULL;
+param_name[3] := N'PARTITION_METHOD';
+int_value[3] := 2;
+double_value[3] := NULL;
+string_value[3] := NULL;
+param_name[4] := N'PARTITION_STRATIFIED_VARIABLE';
+int_value[4] := NULL;
+double_value[4] := NULL;
+string_value[4] := N'ContractActivity';
+param_name[5] := N'SEED';
+int_value[5] := 2;
+double_value[5] := NULL;
+string_value[5] := NULL;
+param_name[6] := N'SPLIT_THRESHOLD';
+int_value[6] := NULL;
+double_value[6] := 1e-07;
+string_value[6] := NULL;
+param_name[7] := N'MIN_SAMPLES_LEAF';
+int_value[7] := 1;
+double_value[7] := NULL;
+string_value[7] := NULL;
+param_name[8] := N'N_ESTIMATORS';
+int_value[8] := 100;
+double_value[8] := NULL;
+string_value[8] := NULL;
+param_name[9] := N'MAX_DEPTH';
+int_value[9] := 20;
+double_value[9] := NULL;
+string_value[9] := NULL;
+param_name[10] := N'CATEGORICAL_VARIABLE';
+int_value[10] := NULL;
+double_value[10] := NULL;
+string_value[10] := N'ContractActivity';
+params = UNNEST(:param_name, :int_value, :double_value, :string_value);
+in_0 = SELECT "ServiceType", "ServiceName", "DataAllowance_MB", "VoiceAllowance_Minutes", "SMSAllowance_N_Messages", "DataUsage_PCT", "DataUsage_PCT_PM", "DataUsage_PCT_PPM", "VoiceUsage_PCT", "VoiceUsage_PCT_PM", "VoiceUsage_PCT_PPM", "SMSUsage_PCT", "SMSUsage_PCT_PM", "SMSUsage_PCT_PPM", "Revenue_Month", "Revenue_Month_PM", "Revenue_Month_PPM", "Revenue_Month_PPPM", "ServiceFailureRate_PCT", "ServiceFailureRate_PCT_PM", "ServiceFailureRate_PCT_PPM", "CustomerLifetimeValue_USD", "CustomerLifetimeValue_USD_PM", "CustomerLifetimeValue_USD_PPM", "Device_Lifetime", "Device_Lifetime_PM", "Device_Lifetime_PPM", "ContractActivity" FROM "bas-hana-pal.db::CUSTOMERCHURN_TRAINSAMPLE";
+CALL "bas-hana-pal.db::PALTrain" (:in_0, :params, out_0, out_1, out_2, out_3, out_4, out_5, out_6, out_7);
+LT_UNIFIED_CLASSIFICATION_MODEL = (SELECT * FROM :out_0);
+LT_UNIFIED_CLASSIFICATION_IMPORTANCE = (SELECT * FROM :out_1);
+LT_UNIFIED_CLASSIFICATION_STATS = (SELECT * FROM :out_2);
+LT_UNIFIED_CLASSIFICATION_CONFUSION_MATRIX = (SELECT * FROM :out_4);
+LT_UNIFIED_CLASSIFICATION_METRICS = (SELECT * FROM :out_5);
+
+END
